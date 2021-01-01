@@ -2,47 +2,71 @@ package me.goldapple.java8to11;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class App {
     public static void main(String[] args){
-        List<String> names = new ArrayList<>();
-        names.add("kmo");
-        names.add("goldapple");
-        names.add("toby");
-        names.add("foo");
+        List<OnlineClass> springClasses = new ArrayList<>();
+        springClasses.add(new OnlineClass(1,"spring boot",true));
+        springClasses.add(new OnlineClass(2,"spring data jpa",true));
+        springClasses.add(new OnlineClass(3,"spring mvc",false));
+        springClasses.add(new OnlineClass(4,"spring core",false));
+        springClasses.add(new OnlineClass(5,"rest api development",false));
 
-        Stream<String> stringStream = names.stream().map(String :: toUpperCase);
-        names.forEach(System.out :: println); //데이터들을 변경하지 않는다.
+        System.out.println("spring 으로 시작하는 수업");
+        //TODO
+        springClasses.stream()
+                    .filter(c->c.getTitle().startsWith("spring"))
+                    .forEach(s-> System.out.println(s.getTitle()));
 
-        //중계형 오퍼레이터는 반드시 종료형 오퍼레이터가 와야 중계형 이 실행된다.없으면 중계형 무의미
-        names.stream().map((s)->{
-            System.out.println(s);
-            return s.toLowerCase();
-        });
-        System.out.println("=========================");
-        List<String> collect = names.stream().map((s) -> {
-            System.out.println(s);
-            return s.toUpperCase();
-        }).collect(Collectors.toList());
-        collect.forEach(System.out :: println);
+        System.out.println("close 되지 않은 수업");
+        //TODO
+        springClasses.stream()
+                    .filter(Predicate.not(OnlineClass::isClosed))
+                    .forEach(oc-> System.out.println(oc.getTitle()));
+        System.out.println("수업 이름만 모아서 스트림 만들기");
+        //TODO
+        springClasses.stream()
+                    .map(OnlineClass :: getTitle)
+                    .forEach(System.out :: println);
 
-        for(String name :names ){
-            if(name.startsWith("k")){
-                System.out.println(name.toUpperCase());
-            }
-        }
-        //->
-        System.out.println("=====================");
+        List<OnlineClass> javaClasses = new ArrayList<>();
+        javaClasses.add(new OnlineClass(6,"The java Test",true));
+        javaClasses.add(new OnlineClass(7,"The java Code mainpulation",true));
+        javaClasses.add(new OnlineClass(8,"The java 8 to 11",false));
 
-        //데이터가 방대하게 많을때 parallelStream 사용 하면 좋다.
-        List<String> collect1 = names.parallelStream().map((s -> {
-            System.out.println(s + " "+Thread.currentThread().getName());
-            return s.toUpperCase();
-        })).collect(Collectors.toList());
-        collect1.forEach(System.out :: println);
+        List<List<OnlineClass>> kmoEvents = new ArrayList<>();
+        kmoEvents.add(springClasses);
+        kmoEvents.add(javaClasses);
 
+        System.out.println("두 수업 목록에 들어 있는 모든 수업 아이디 출력");
+        //TODO
+        kmoEvents.stream()
+                .flatMap(Collection ::stream)
+                .forEach(oc-> System.out.println(oc.getId()));
+
+        System.out.println("10부터 1씩 증가하는 무제한 스트림 중에서 앞에 10개 빼고 최대 10개 까지만");
+        //TODO
+        Stream.iterate(10,i->i+1)
+                .skip(10)
+                .limit(10)
+                .forEach(System.out :: println);
+
+        System.out.println("자바 수업중에 Test 가 들어있는 수업이 있는지 확인");
+        //TODO
+        boolean test = javaClasses.stream().anyMatch(oc -> oc.getTitle().contains("Test"));
+        System.out.println(test);
+
+        System.out.println("스프링 수업 중에 제목에 spring 이 들어간 제목만 모아서 List 로 만들기");
+        //TODO
+        List<String> spring = springClasses.stream()
+                .filter(oc -> oc.getTitle().contains("spring"))
+                .map(OnlineClass :: getTitle)
+                .collect(Collectors.toList());
+        spring.forEach(System.out :: println);
     }
 }
