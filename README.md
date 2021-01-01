@@ -1,5 +1,8 @@
-### 인터페이스에 있는 모든 메소드들은 public 이다.
-### Foo ,Bar 안에 같은 이름의 default 메소드가 있고 그 두개를 동시에 구현하는 구현체가 있으면 
-### 컴파일 에러가 난다. 그럴시에는 다시 구현체에서 재정의 를 해주면 된다.
+### 컬렉션 은 데이터를 가지고 있는거고
+### 스트림은 이러한 데이터를 소스로 사용해서 어떠한 처리를 하는것 컨베이어 벨트에 지나가면서 하나씩
 
-![image](https://user-images.githubusercontent.com/40969203/103409757-94086100-4bab-11eb-8609-eb5f27dd4a4f.png)
+### stream 컨베이어 벨트 에 비유 한번그냥 슥 지나간다.
+  |a|b||c|d|
+
+![image](https://user-images.githubusercontent.com/40969203/103432997-d58d2080-4c2c-11eb-85ff-f9d5f4cda372.png)
+
