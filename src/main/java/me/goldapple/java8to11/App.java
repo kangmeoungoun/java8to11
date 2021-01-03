@@ -30,7 +30,8 @@ public class App {
         System.out.println(helloFuture.isDone());
         System.out.println("Started!");
 
-        //helloFuture.cancel(false); //true 현재 진행중인 작업을 종료 cancel 을 아면 done 은 true
+        //hell
+        oFuture.cancel(false); //true 현재 진행중인 작업을 종료 cancel 을 아면 done 은 true
         //helloFuture.get(); //블록킹
 
         System.out.println(helloFuture.isDone());
@@ -43,6 +44,7 @@ public class App {
         for (Future<String> f : futures) {
             System.out.println(f.get());
         }
+
         executorService.shutdown();
     }
 
