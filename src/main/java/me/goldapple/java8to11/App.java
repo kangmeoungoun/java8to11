@@ -1,52 +1,51 @@
 package me.goldapple.java8to11;
 
 
-public class App {
-    public static void main(String[] args) {
-        //MyThread myThread = new MyThread();
-        //myThread.start();
-        //리턴타입void return 메소드 종료
-        /*
-        Thread thread = new Thread(()->{
-            while(true){
-                System.out.println("Thread : "+Thread.currentThread().getName());
-                try {
-                    Thread.sleep(1000L);
-                } catch (InterruptedException e) { //자는 동안에 누가 깨우면 익셉션 발생
-                    System.out.println("exit!");
-                    return;
-                }
-            }
-        });
-        thread.start();
-        System.out.println("Hello "+Thread.currentThread().getName());
-        Thread.sleep(3000L);
-        thread.interrupt();;
-        */
-        Thread thread = new Thread(()->{
-            System.out.println("Thread : "+Thread.currentThread().getName());
-            try {
-                Thread.sleep(3000L);
-            } catch (InterruptedException e) {
-                throw new IllegalStateException();
-            }
-        });
-        thread.start();
-        System.out.println("Hello"+Thread.currentThread().getName());
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println(thread+ " is finished");
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.*;
 
-    }
-    /**/
-    static class MyThread extends Thread{
-        @Override
-        public void run(){
-            System.out.println("Thread : "+Thread.currentThread().getName());
+public class App {
+    public static void main(String[] args) throws ExecutionException, InterruptedException{
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+
+        Callable<String> hello = ()->{
+          Thread.sleep(3000L);
+            System.out.println("hello"+Thread.currentThread().getName());
+            return "hello";
+        };
+        Callable<String> java = ()->{
+            Thread.sleep(1000L);
+            System.out.println("Java"+Thread.currentThread().getName());
+            throw new IllegalStateException();
+            //return "Java";
+        };
+        Callable<String> kmo = ()->{
+            Thread.sleep(3000L);
+            System.out.println("kmo"+Thread.currentThread().getName());
+            return "kmo";
+        };
+        /*
+        Future<String> helloFuture = executorService.submit(hello);
+        System.out.println(helloFuture.isDone());
+        System.out.println("Started!");
+
+        //helloFuture.cancel(false); //true 현재 진행중인 작업을 종료 cancel 을 아면 done 은 true
+        //helloFuture.get(); //블록킹
+
+        System.out.println(helloFuture.isDone());
+        System.out.println("End!");
+        */
+
+        //String s = executorService.invokeAny(Arrays.asList(hello , java , kmo));
+        //System.out.println(s);
+        List<Future<String>> futures = executorService.invokeAll(Arrays.asList(hello , java , kmo));
+        for (Future<String> f : futures) {
+            System.out.println(f.get());
         }
+        executorService.shutdown();
     }
+
+
 
 }
