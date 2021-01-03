@@ -1,52 +1,33 @@
 package me.goldapple.java8to11;
 
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class App {
-    public static void main(String[] args) {
-        //MyThread myThread = new MyThread();
-        //myThread.start();
-        //리턴타입void return 메소드 종료
-        /*
-        Thread thread = new Thread(()->{
-            while(true){
-                System.out.println("Thread : "+Thread.currentThread().getName());
-                try {
-                    Thread.sleep(1000L);
-                } catch (InterruptedException e) { //자는 동안에 누가 깨우면 익셉션 발생
-                    System.out.println("exit!");
-                    return;
-                }
-            }
-        });
-        thread.start();
-        System.out.println("Hello "+Thread.currentThread().getName());
-        Thread.sleep(3000L);
-        thread.interrupt();;
+    public static void main(String[] args){
+        /* 쓰레드
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        executorService.execute(getRunnable("Hello"));
+        executorService.execute(getRunnable("kmo"));
+        executorService.execute(getRunnable("The"));
+        executorService.execute(getRunnable("java"));
+        executorService.execute(getRunnable("thread"));
         */
-        Thread thread = new Thread(()->{
-            System.out.println("Thread : "+Thread.currentThread().getName());
-            try {
-                Thread.sleep(3000L);
-            } catch (InterruptedException e) {
-                throw new IllegalStateException();
-            }
-        });
-        thread.start();
-        System.out.println("Hello"+Thread.currentThread().getName());
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println(thread+ " is finished");
+        //executorService 셧다운을 하지 않으면 계속 프로그램이 살아 있음
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+
+
+        executorService.scheduleAtFixedRate(getRunnable("Hello"), 3,2,TimeUnit.SECONDS);
+        //executorService.shutdown();
 
     }
-    /**/
-    static class MyThread extends Thread{
-        @Override
-        public void run(){
-            System.out.println("Thread : "+Thread.currentThread().getName());
-        }
-    }
 
+    private static Runnable getRunnable(String message){
+        return () -> {
+            System.out.println(message + Thread.currentThread().getName());
+        };
+    }
 }

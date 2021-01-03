@@ -1,2 +1,8 @@
-![image](https://user-images.githubusercontent.com/40969203/103474441-31030e00-4de7-11eb-8a36-39c574e2d7ba.png)
-![image](https://user-images.githubusercontent.com/40969203/103474443-34969500-4de7-11eb-8287-ffd7ba285a6d.png)
+##### ExecutorService executorService = Executors.newFixedThreadPool(2); 
+executorService.execute(getRunnable("Hello"));
+executorService.execute(getRunnable("kmo"));
+executorService.execute(getRunnable("The"));
+executorService.execute(getRunnable("java"));
+executorService.execute(getRunnable("thread"));
+* 2개의쓰레드가 잡업하고 있는 동안 3개는 큐에서 대기한다.
+  ![image](https://user-images.githubusercontent.com/40969203/103475074-77f40200-4ded-11eb-8e2d-d1930015bb46.png)
