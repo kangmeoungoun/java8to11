@@ -1,51 +1,32 @@
 package me.goldapple.java8to11;
 
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class App {
     public static void main(String[] args) throws ExecutionException, InterruptedException{
+        //CompletableFuture<String> future = new CompletableFuture<>();
+        //future.complete("kmo");
+        //CompletableFuture<String> future = CompletableFuture.completedFuture("kmo");
+        //리턴 없을때
+        //
         ExecutorService executorService = Executors.newFixedThreadPool(4);
 
-        Callable<String> hello = ()->{
-          Thread.sleep(3000L);
-            System.out.println("hello"+Thread.currentThread().getName());
+        //CompletableFuture<Void> voidCompletableFuture = CompletableFuture.runAsync(() -> System.out.println("hello" + Thread.currentThread().getName()));
+        //voidCompletableFuture.get();
+        CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+            System.out.println("hello" + Thread.currentThread().getName());
             return "hello";
-        };
-        Callable<String> java = ()->{
-            Thread.sleep(1000L);
-            System.out.println("Java"+Thread.currentThread().getName());
-            throw new IllegalStateException();
-            //return "Java";
-        };
-        Callable<String> kmo = ()->{
-            Thread.sleep(3000L);
-            System.out.println("kmo"+Thread.currentThread().getName());
-            return "kmo";
-        };
-        /*
-        Future<String> helloFuture = executorService.submit(hello);
-        System.out.println(helloFuture.isDone());
-        System.out.println("Started!");
+        },executorService).thenApplyAsync((s)->{//콜백 리턴값으로 어떤걸 할때
+            System.out.println(Thread.currentThread().getName());
+            return s.toUpperCase();
+        },executorService);
+        //thenAccept() 리턴 없을떄
+        future.get();
 
-        //hell
-        oFuture.cancel(false); //true 현재 진행중인 작업을 종료 cancel 을 아면 done 은 true
-        //helloFuture.get(); //블록킹
-
-        System.out.println(helloFuture.isDone());
-        System.out.println("End!");
-        */
-
-        //String s = executorService.invokeAny(Arrays.asList(hello , java , kmo));
-        //System.out.println(s);
-        List<Future<String>> futures = executorService.invokeAll(Arrays.asList(hello , java , kmo));
-        for (Future<String> f : futures) {
-            System.out.println(f.get());
-        }
-
-        executorService.shutdown();
     }
 
 
